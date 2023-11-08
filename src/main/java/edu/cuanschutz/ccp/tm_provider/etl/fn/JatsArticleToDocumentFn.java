@@ -44,8 +44,6 @@ public class JatsArticleToDocumentFn extends DoFn<Article, KV<String, List<Strin
 	public static final String UNKNOWN_PUBLICATION_TYPE = "Unknown";
 	public static TupleTag<KV<String, List<String>>> sectionAnnotationsTag = new TupleTag<KV<String, List<String>>>() {
 	};
-	public static TupleTag<KV<String, List<String>>> plainTextTag = new TupleTag<KV<String, List<String>>>() {
-	};
 	public static TupleTag<EtlFailureData> etlFailureTag = new TupleTag<EtlFailureData>() {
 	};
 	public static TupleTag<ProcessingStatus> processingStatusTag = new TupleTag<ProcessingStatus>() {
@@ -72,7 +70,7 @@ public class JatsArticleToDocumentFn extends DoFn<Article, KV<String, List<Strin
 		}
 		if (sectionsDocumentCriteria != null) {
 			try {
-				outputDocument(context, document);
+				outputDocument(context, document, sectionAnnotationsTag);
 			} catch (Throwable t) {
 				EtlFailureData failureData = new EtlFailureData(sectionsDocumentCriteria,
 						"Potential error outputting section annotations", document.getSourceid(), t, timestamp);
@@ -199,18 +197,14 @@ public class JatsArticleToDocumentFn extends DoFn<Article, KV<String, List<Strin
 		return DEFAULT_PUB_YEAR;
 	}
 
-	public static void outputDocument(ProcessContext context, TextDocumentWithMetadata doc) throws IOException {
+	public static void outputDocument(ProcessContext context, TextDocumentWithMetadata doc,
+			TupleTag<KV<String, List<String>>> tag) throws IOException {
 		BioNLPDocumentWriter writer = new BioNLPDocumentWriter();
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		writer.serialize(doc, stream, CharacterEncoding.UTF_8);
 		String serializedAnnotations = stream.toString(CharacterEncoding.UTF_8.getCharacterSetName());
 		List<String> chunkedAnnotations = chunkContent(serializedAnnotations);
-		context.output(sectionAnnotationsTag, KV.of(doc.getSourceid(), chunkedAnnotations));
-		
-		/* output the document plain text */
-		List<String> chunkedPlainText = chunkContent(doc.getText());
-		context.output(plainTextTag, KV.of(doc.getSourceid(), chunkedPlainText));
-		
+		context.output(tag, KV.of(doc.getSourceid(), chunkedAnnotations));
 		ProcessingStatus status = new ProcessingStatus(doc.getSourceid());
 		status.setYearPublished(doc.getYearPublished() == null ? DEFAULT_PUB_YEAR : doc.getYearPublished());
 		if (doc.getPublicationTypes() != null && !doc.getPublicationTypes().isEmpty()) {
