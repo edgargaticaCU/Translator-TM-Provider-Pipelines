@@ -36,8 +36,9 @@ public class SentenceCooccurrenceFileBuilderFn extends DoFn<KV<String, Map<Docum
 	private final String pipelineVersion;
 	private final com.google.cloud.Timestamp timestamp;
 
-	public static PCollectionTuple process(PCollection<KV<String, Map<DocumentType, String>>> docIdToAnnotations,
-			DocumentCriteria outputDocCriteria, com.google.cloud.Timestamp timestamp) {
+	public static PCollectionTuple process(
+			PCollection<KV<String, Map<DocumentType, String>>> docIdToAnnotations, DocumentCriteria outputDocCriteria,
+			com.google.cloud.Timestamp timestamp) {
 
 		return docIdToAnnotations.apply("Create BigQuery load file",
 				ParDo.of(new DoFn<KV<String, Map<DocumentType, String>>, String>() {

@@ -72,6 +72,7 @@ public class BiocToTextFnTest {
 		pipeline.run();
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testBiocToTextConversionFn2() throws IOException {
@@ -112,7 +113,7 @@ public class BiocToTextFnTest {
 
 		pipeline.run();
 	}
-
+	
 	@Test
 	public void testBiocToTextConversionFn_invalidInput() throws IOException {
 		PipelineKey pipelineKey = PipelineKey.BIOC_TO_TEXT;
@@ -147,7 +148,8 @@ public class BiocToTextFnTest {
 
 		pipeline.run();
 	}
-
+	
+	
 //	@SuppressWarnings("unchecked")
 //	@Test
 //	public void testBiocToTextConversionFn_EmptyStackException() throws IOException {
@@ -190,5 +192,6 @@ public class BiocToTextFnTest {
 //
 //		pipeline.run();
 //	}
+	
 
 }

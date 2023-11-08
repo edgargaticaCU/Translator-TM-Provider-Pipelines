@@ -125,12 +125,14 @@ public class OntologyClassBiolinkCategoryMapFactory {
 				File ontologyFile = fileIterator.next();
 				processOntology(prefixToBiolinkMap, writer, ontologyFile);
 			}
-
+			
 			for (Iterator<File> fileIterator = FileUtil.getFileIterator(ontologyDir, false, ".owl.gz"); fileIterator
 					.hasNext();) {
 				File ontologyFile = fileIterator.next();
 				processOntology(prefixToBiolinkMap, writer, ontologyFile);
 			}
+
+			
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

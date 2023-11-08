@@ -10,7 +10,6 @@ import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.datastore.DatastoreIO;
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
-import org.apache.beam.sdk.options.Validation.Required;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
@@ -39,39 +38,29 @@ public class ConceptAnnotationExportPipeline {
 
 	public interface Options extends DataflowPipelineOptions {
 		@Description("Location of the output bucket")
-		@Required
 		String getOutputBucket();
 
 		void setOutputBucket(String value);
 
 		@Description("This pipeline key will be used to select the input text documents that will be exported")
-		@Required
 		PipelineKey getTextInputPipelineKey();
 
 		void setTextInputPipelineKey(PipelineKey value);
 
 		@Description("This pipeline version will be used to select the input text documents that will be exported")
-		@Required
 		String getTextInputPipelineVersion();
 
 		void setTextInputPipelineVersion(String value);
 
 		@Description("This pipeline version will be used to select the concept annotation documents that will be exported")
-		@Required
 		String getConceptPostProcessPipelineVersion();
 
 		void setConceptPostProcessPipelineVersion(String value);
 
 		@Description("The document collection to process")
-		@Required
 		String getCollection();
 
 		void setCollection(String value);
-
-		@Description("An optional collection that can be used when retrieving documents that do not below to the same collection as the status entity. This is helpful when only the status entity has been assigned to a particular collection that we want to process, e.g., the redo collections.")
-		String getOptionalDocumentSpecificCollection();
-
-		void setOptionalDocumentSpecificCollection(String value);
 
 	}
 
@@ -105,8 +94,7 @@ public class ConceptAnnotationExportPipeline {
 
 		PCollection<KV<ProcessingStatus, Map<DocumentCriteria, String>>> statusEntity2Content = PipelineMain
 				.getStatusEntity2Content(inputDocumentCriteria, options.getProject(), p, targetProcessingStatusFlag,
-						requiredProcessStatusFlags, options.getCollection(), OverwriteOutput.YES,
-						options.getOptionalDocumentSpecificCollection());
+						requiredProcessStatusFlags, options.getCollection(), OverwriteOutput.YES);
 
 		/*
 		 * outputDocCriteria is only used to create a failure document if an error
