@@ -1,4 +1,4 @@
-package edu.cuanschutz.ccp.tm_provider.etl.deprecated;
+package edu.cuanschutz.ccp.tm_provider.etl;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -25,13 +25,10 @@ import org.apache.beam.sdk.values.PCollectionView;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.datastore.v1.Entity;
 
-import edu.cuanschutz.ccp.tm_provider.etl.EtlFailureData;
-import edu.cuanschutz.ccp.tm_provider.etl.PipelineMain;
-import edu.cuanschutz.ccp.tm_provider.etl.ProcessingStatus;
 import edu.cuanschutz.ccp.tm_provider.etl.fn.EtlFailureToEntityFn;
 import edu.cuanschutz.ccp.tm_provider.etl.fn.PCollectionUtil;
-import edu.cuanschutz.ccp.tm_provider.etl.fn.PCollectionUtil.Delimiter;
 import edu.cuanschutz.ccp.tm_provider.etl.fn.SentenceExtractionWebAnnoFn;
+import edu.cuanschutz.ccp.tm_provider.etl.fn.PCollectionUtil.Delimiter;
 import edu.cuanschutz.ccp.tm_provider.etl.util.DatastoreProcessingStatusUtil.OverwriteOutput;
 import edu.cuanschutz.ccp.tm_provider.etl.util.DocumentCriteria;
 import edu.cuanschutz.ccp.tm_provider.etl.util.DocumentFormat;
@@ -41,8 +38,6 @@ import edu.cuanschutz.ccp.tm_provider.etl.util.ProcessingStatusFlag;
 import edu.cuanschutz.ccp.tm_provider.etl.util.Version;
 
 /**
- * Note: this pipeline is not actively used
- * 
  * Useful for extracting sentences for creating corpora for manual annotation
  */
 public class WebAnnoSentenceExtractionPipeline {
@@ -117,10 +112,6 @@ public class WebAnnoSentenceExtractionPipeline {
 
 		void setAncestorMapFileSetDelimiter(Delimiter delimiter);
 
-		@Description("An optional collection that can be used when retrieving documents that do not below to the same collection as the status entity. This is helpful when only the status entity has been assigned to a particular collection that we want to process, e.g., the redo collections.")
-		String getOptionalDocumentSpecificCollection();
-
-		void setOptionalDocumentSpecificCollection(String value);
 	}
 
 	public static void main(String[] args) {
@@ -146,8 +137,7 @@ public class WebAnnoSentenceExtractionPipeline {
 
 		PCollection<KV<ProcessingStatus, Map<DocumentCriteria, String>>> statusEntity2Content = PipelineMain
 				.getStatusEntity2Content(inputDocCriteria, options.getProject(), p, targetProcessingStatusFlag,
-						requiredProcessStatusFlags, options.getCollection(), options.getOverwrite(),
-						options.getOptionalDocumentSpecificCollection());
+						requiredProcessStatusFlags, options.getCollection(), options.getOverwrite());
 
 		DocumentCriteria outputDocCriteria = new DocumentCriteria(conceptDocumentType, DocumentFormat.BIONLP,
 				PIPELINE_KEY, pipelineVersion);

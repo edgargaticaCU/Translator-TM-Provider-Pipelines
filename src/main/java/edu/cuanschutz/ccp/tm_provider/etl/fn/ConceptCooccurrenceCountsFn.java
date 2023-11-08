@@ -156,7 +156,7 @@ public class ConceptCooccurrenceCountsFn extends DoFn<KV<String, String>, KV<Str
 
 		Map<String, Set<String>> textIdToConceptIds = new HashMap<String, Set<String>>();
 
-		String documentText = PipelineMain.getDocumentText(docs, documentId);
+		String documentText = PipelineMain.getDocumentText(docs);
 		Map<DocumentType, Collection<TextAnnotation>> docTypeToContentMap = PipelineMain
 				.getDocTypeToContentMap(documentId, docs);
 

@@ -33,13 +33,16 @@ public class ProcessingStatusToEntityFnTest {
 		status.enableFlag(ProcessingStatusFlag.OGER_CL_DONE);
 
 		PCollection<ProcessingStatus> input = pipeline.apply(Create.of(status));
-		PCollection<KV<String, Entity>> output = input.apply(ParDo.of(new ProcessingStatusToEntityFn()));
+		PCollection<KV<String,Entity>> output = input.apply(ParDo.of(new ProcessingStatusToEntityFn()));
 		Entity expectedEntity = ProcessingStatusToEntityFn.buildStatusEntity(status);
 		PAssert.that(output).containsInAnyOrder(KV.of(expectedEntity.getKey().toString(), expectedEntity));
 
 		pipeline.run();
 	}
 
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testProcessingStatusToEntityConversionFnWithPubYearAndTypes() throws IOException {
@@ -55,7 +58,7 @@ public class ProcessingStatusToEntityFnTest {
 		status.enableFlag(ProcessingStatusFlag.OGER_CL_DONE);
 
 		PCollection<ProcessingStatus> input = pipeline.apply(Create.of(status));
-		PCollection<KV<String, Entity>> output = input.apply(ParDo.of(new ProcessingStatusToEntityFn()));
+		PCollection<KV<String,Entity>> output = input.apply(ParDo.of(new ProcessingStatusToEntityFn()));
 		Entity expectedEntity = ProcessingStatusToEntityFn.buildStatusEntity(status);
 		PAssert.that(output).containsInAnyOrder(KV.of(expectedEntity.getKey().toString(), expectedEntity));
 
